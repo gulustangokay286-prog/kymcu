@@ -45,7 +45,7 @@ export function GoldPriceTable() {
         <div className="flex justify-center">
           <Star className="w-5 h-5 text-[#cfa95f] fill-current" />
         </div>
-        <div className="text-right text-[10px] text-[#888888] tracking-widest uppercase mt-4">
+        <div className="text-center text-[10px] text-[#888888] tracking-widest uppercase mt-4">
           SON GÜNCELLEME ZAMANI : {time(lastUpdate)}
         </div>
       </div>
