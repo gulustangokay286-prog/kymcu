@@ -6,7 +6,7 @@ import { Star } from 'lucide-react';
 
 function fmt(v: number): string {
   if (!v) return '–';
-  return v.toLocaleString('tr-TR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  return v.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function time(iso: string): string {

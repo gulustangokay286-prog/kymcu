@@ -26,8 +26,14 @@
     background-image: url('/bg-luxury.png');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: scroll;
     min-height: 100vh;
+  }
+  
+  @media (min-width: 768px) {
+    body {
+      background-attachment: fixed;
+    }
   }
   html {
     scroll-behavior: smooth;

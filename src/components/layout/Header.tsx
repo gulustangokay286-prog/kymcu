@@ -13,7 +13,7 @@ export function Header() {
       <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-between h-20">
         {/* Logo - Ahlatci style (clean, white) */}
         <Link href="/" className="flex flex-col shrink-0">
-          <span className="text-[22px] font-bold tracking-widest text-white uppercase luxury-header">
+          <span className="text-[17px] md:text-[22px] font-bold tracking-widest text-white uppercase luxury-header">
             {BUSINESS.shortName}
           </span>
         </Link>
@@ -64,9 +64,9 @@ export function Header() {
               </Link>
             ))}
             
-            <div className="bg-[#333333] px-4 py-3 mt-4 rounded-sm border border-white/10 inline-block w-max">
-              <span className="block text-[12px] text-white font-bold tracking-wider">A Grubu</span>
-              <span className="block text-[11px] text-white/70">Yetkili Müessese</span>
+            <div className="bg-[#333333] px-3 py-2 mt-4 rounded-sm border border-white/10 inline-block w-max">
+              <span className="block text-[11px] text-white font-bold tracking-wider">A Grubu</span>
+              <span className="block text-[10px] text-white/70">Yetkili Müessese</span>
             </div>
           </div>
         </div>

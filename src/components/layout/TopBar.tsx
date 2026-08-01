@@ -19,7 +19,7 @@ export function TopBar() {
   // FX
   for (const r of rates) {
     if (['USD', 'EUR', 'GBP'].includes(r.code)) {
-      items.push({ label: `${r.code}/TRY`, value: `₺${r.buyPrice.toLocaleString('tr-TR', { minimumFractionDigits: 4 })}`, pct: r.changePercent });
+      items.push({ label: `${r.code}/TRY`, value: `₺${r.buyPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, pct: r.changePercent });
     }
   }
 
