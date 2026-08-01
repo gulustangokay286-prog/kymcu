@@ -245,10 +245,10 @@ export async function fetchExchangeFromScraping(): Promise<ExchangeRate[]> {
     const results: ExchangeRate[] = [];
 
     for (const [domId, mapping] of Object.entries(SCRAPE_FX_MAP)) {
-      const priceStr = $(`#${domId}`).text().trim();
-      const percentStr = $(`#${domId}_PERCENT`).text().trim();
+      const elements = $(`#${domId}`);
+      const percentStr = $(`#${domId}_PERCENT`).first().text().trim();
       
-      if (!priceStr) {
+      if (elements.length === 0) {
         // Fallback to table scraping
         const row = $('tr').filter((_, el) => {
           const text = $(el).find('td').first().text().toLowerCase();
@@ -260,8 +260,8 @@ export async function fetchExchangeFromScraping(): Promise<ExchangeRate[]> {
           const sellStr = row.find('td').eq(2).text().trim();
           const changeStr = row.find('td').eq(3).text().trim();
           
-          const buyPrice = parseFloat(buyStr.replace('.', '').replace(',', '.') || '0');
-          const sellPrice = parseFloat(sellStr.replace('.', '').replace(',', '.') || '0');
+          const buyPrice = parseFloat(buyStr.replace(/\./g, '').replace(',', '.') || '0');
+          const sellPrice = parseFloat(sellStr.replace(/\./g, '').replace(',', '.') || '0');
           const changePercent = parseFloat(changeStr.replace('%', '').replace(',', '.') || '0');
           
           if (buyPrice > 0) {
@@ -280,10 +280,28 @@ export async function fetchExchangeFromScraping(): Promise<ExchangeRate[]> {
         continue;
       }
       
-      const sellPrice = parseFloat(priceStr.replace('.', '').replace(',', '.') || '0');
-      // Simulate small spread for buy price
-      const buyPrice = sellPrice * 0.998; 
-      const changePercent = parseFloat(percentStr.replace('%', '').replace(',', '.') || '0');
+      const buyStr = elements.eq(0).text().trim();
+      const sellStr = elements.length > 1 ? elements.eq(1).text().trim() : buyStr;
+      
+      const parseValue = (s: string) => {
+        if (!s) return 0;
+        if (s.includes(',') && s.lastIndexOf(',') > s.lastIndexOf('.')) {
+          return parseFloat(s.replace(/\./g, '').replace(',', '.'));
+        }
+        if (s.includes(',') && !s.includes('.')) {
+          return parseFloat(s.replace(',', '.'));
+        }
+        return parseFloat(s.replace(/,/g, ''));
+      };
+
+      let buyPrice = parseValue(buyStr);
+      let sellPrice = parseValue(sellStr);
+      
+      if (buyPrice === sellPrice && sellPrice > 0) {
+        buyPrice = sellPrice * 0.998; 
+      }
+      
+      const changePercent = parseValue(percentStr.replace('%', ''));
       
       if (sellPrice > 0) {
         results.push({
