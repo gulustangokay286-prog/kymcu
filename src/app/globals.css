@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Midnight Blue & Rose Gold Palette */
+  --color-background: #020617; /* Slate 950 - Midnight Blue */
+  --color-foreground: #f8fafc;
+  
+  --color-primary: #e8b4a2; /* Rose Gold */
+  --color-primary-foreground: #020617;
+  
+  --color-secondary: #0f172a; /* Slate 900 */
+  --color-secondary-foreground: #f8fafc;
+
+  --color-border: rgba(255, 255, 255, 0.1);
+  
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Luxury Image Background */
+    background-image: url('/bg-luxury.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================
+   Glassmorphism Classes
+   ============================ */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.65); /* Slate 900 with opacity */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.glass-header {
+  background: rgba(2, 6, 23, 0.85); /* Slate 950 */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ============================
+   Typography Scale
+   ============================ */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Luxury Headers */
+.luxury-header {
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.luxury-star {
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* ============================
+   Price update — subtle flash
+   ============================ */
+@keyframes cell-flash-dark {
+  0% { background-color: rgba(232, 180, 162, 0.15); /* Rose Gold flash */ }
+  100% { background-color: transparent; }
+}
+.cell-flash {
+  animation: cell-flash-dark 1.2s ease-out;
+}
+
+/* ============================
+   Live dot
+   ============================ */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.live-pulse {
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* ============================
+   Table rows
+   ============================ */
+.fin-row {
+  transition: background-color 150ms ease-out;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.fin-row:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.fin-table-th {
+  color: #94a3b8; /* Slate 400 */
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
