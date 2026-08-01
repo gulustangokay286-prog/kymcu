@@ -126,7 +126,7 @@ export function CurrencyConverter() {
           <div className="text-[28px] font-bold text-[#cfa95f] tabular-nums tracking-wider">
             {result !== null ? (
               <>
-                {result.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {result.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 <span className="text-[14px] text-[#888] ml-2 font-medium">
                   {toAsset === 'TRY' ? '₺' : assets.find(a => a.code === toAsset)?.code === 'ons-altin' || assets.find(a => a.code === toAsset)?.code === 'gram-altin' || assets.find(a => a.code === toAsset)?.code === 'ceyrek-altin' ? '' : toAsset}
                 </span>

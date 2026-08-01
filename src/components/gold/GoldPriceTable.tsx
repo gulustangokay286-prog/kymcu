@@ -7,7 +7,7 @@ import { Star } from 'lucide-react';
 function fmt(v: number, unit: string = 'TL'): string {
   if (!v) return '–';
   if (unit === 'USD') return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return v.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function time(iso: string): string {
