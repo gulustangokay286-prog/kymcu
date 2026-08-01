@@ -22,10 +22,24 @@ interface GenelParaDoviz {
 const FX_MAP: Record<string, { code: string; name: string; flag: string }> = {
   'USD': { code: 'USD', name: 'Amerikan Doları', flag: '🇺🇸' },
   'EUR': { code: 'EUR', name: 'Euro', flag: '🇪🇺' },
-  'GBP': { code: 'GBP', name: 'İngiliz Sterlini', flag: '🇬🇧' },
+  'XAU': { code: 'XAU', name: 'Altın (Gram)', flag: '🪙' },
+  'EURUSD': { code: 'EURUSD', name: 'Euro/Dolar Paritesi', flag: '💶' },
+  'XAUUSD': { code: 'XAUUSD', name: 'Altın (ONS)', flag: '⚖️' },
+  'SEPET': { code: 'SEPET', name: 'Sepet Kur', flag: '🧺' },
   'CHF': { code: 'CHF', name: 'İsviçre Frangı', flag: '🇨🇭' },
+  'DKK': { code: 'DKK', name: 'Danimarka Kronu', flag: '🇩🇰' },
+  'GBP': { code: 'GBP', name: 'İngiliz Sterlini', flag: '🇬🇧' },
+  'AUD': { code: 'AUD', name: 'Avustralya Doları', flag: '🇦🇺' },
+  'SEK': { code: 'SEK', name: 'İsveç Kronu', flag: '🇸🇪' },
   'SAR': { code: 'SAR', name: 'Suudi Riyali', flag: '🇸🇦' },
+  'CAD': { code: 'CAD', name: 'Kanada Doları', flag: '🇨🇦' },
+  'NOK': { code: 'NOK', name: 'Norveç Kronu', flag: '🇳🇴' },
+  'JPY': { code: 'JPY', name: 'Japon Yeni', flag: '🇯🇵' },
   'AED': { code: 'AED', name: 'BAE Dirhemi', flag: '🇦🇪' },
+  'XAG': { code: 'XAG', name: 'Gümüş', flag: '🥈' },
+  'RUB': { code: 'RUB', name: 'Rus Rublesi', flag: '🇷🇺' },
+  'XPD': { code: 'XPD', name: 'Paladyum', flag: '⛓️' },
+  'XPT': { code: 'XPT', name: 'Platin', flag: '💿' },
 };
 
 export async function fetchExchangeFromGenelPara(): Promise<ExchangeRate[]> {
@@ -228,6 +242,14 @@ const SCRAPE_FX_MAP: Record<string, { code: string; name: string; flag: string }
   'CHFTRY': { code: 'CHF', name: 'İsviçre Frangı', flag: '🇨🇭' },
   'SARTRY': { code: 'SAR', name: 'Suudi Riyali', flag: '🇸🇦' },
   'AEDTRY': { code: 'AED', name: 'BAE Dirhemi', flag: '🇦🇪' },
+  'DKKTRY': { code: 'DKK', name: 'Danimarka Kronu', flag: '🇩🇰' },
+  'SEKTRY': { code: 'SEK', name: 'İsveç Kronu', flag: '🇸🇪' },
+  'NOKTRY': { code: 'NOK', name: 'Norveç Kronu', flag: '🇳🇴' },
+  'JPYTRY': { code: 'JPY', name: 'Japon Yeni', flag: '🇯🇵' },
+  'CADTRY': { code: 'CAD', name: 'Kanada Doları', flag: '🇨🇦' },
+  'AUDTRY': { code: 'AUD', name: 'Avustralya Doları', flag: '🇦🇺' },
+  'RUBTRY': { code: 'RUB', name: 'Rus Rublesi', flag: '🇷🇺' },
+  'XAGTRY': { code: 'XAG', name: 'Gümüş', flag: '🥈' },
 };
 
 export async function fetchExchangeFromScraping(): Promise<ExchangeRate[]> {
