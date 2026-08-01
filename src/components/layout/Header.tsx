@@ -13,7 +13,7 @@ export function Header() {
       <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-between h-20">
         {/* Logo - Ahlatci style (clean, white) */}
         <Link href="/" className="flex flex-col shrink-0">
-          <span className="text-[17px] md:text-[22px] font-bold tracking-widest text-white uppercase luxury-header">
+          <span className="text-[15px] md:text-[22px] font-bold tracking-widest text-white uppercase luxury-header">
             {BUSINESS.shortName}
           </span>
         </Link>
@@ -42,10 +42,10 @@ export function Header() {
         {/* Mobile toggle */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden p-2 text-white/70 hover:text-white"
+          className="md:hidden p-1.5 text-white/70 hover:text-white"
           aria-label="Menü"
         >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
@@ -64,9 +64,9 @@ export function Header() {
               </Link>
             ))}
             
-            <div className="bg-[#333333] px-3 py-2 mt-4 rounded-sm border border-white/10 inline-block w-max">
-              <span className="block text-[11px] text-white font-bold tracking-wider">A Grubu</span>
-              <span className="block text-[10px] text-white/70">Yetkili Müessese</span>
+            <div className="bg-[#333333] px-2.5 py-1.5 mt-2 rounded-sm border border-white/10 inline-block w-max">
+              <span className="block text-[10px] text-white font-bold tracking-wider">A Grubu</span>
+              <span className="block text-[9px] text-white/70">Yetkili Müessese</span>
             </div>
           </div>
         </div>
