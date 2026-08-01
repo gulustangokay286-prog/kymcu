@@ -205,8 +205,29 @@ export async function fetchExchangeFromTruncgil(): Promise<ExchangeRate[]> {
   const rawData: Record<string, TruncgilItem> = await response.json();
   const results: ExchangeRate[] = [];
 
+  const TRUNCGIL_FX_MAP: Record<string, { code: string; name: string; flag: string }> = {
+    'USD': { code: 'USD', name: 'Amerikan Doları', flag: '🇺🇸' },
+    'EUR': { code: 'EUR', name: 'Euro', flag: '🇪🇺' },
+    'GBP': { code: 'GBP', name: 'İngiliz Sterlini', flag: '🇬🇧' },
+    'CHF': { code: 'CHF', name: 'İsviçre Frangı', flag: '🇨🇭' },
+    'CAD': { code: 'CAD', name: 'Kanada Doları', flag: '🇨🇦' },
+    'RUB': { code: 'RUB', name: 'Rus Rublesi', flag: '🇷🇺' },
+    'AED': { code: 'AED', name: 'BAE Dirhemi', flag: '🇦🇪' },
+    'AUD': { code: 'AUD', name: 'Avustralya Doları', flag: '🇦🇺' },
+    'DKK': { code: 'DKK', name: 'Danimarka Kronu', flag: '🇩🇰' },
+    'SEK': { code: 'SEK', name: 'İsveç Kronu', flag: '🇸🇪' },
+    'NOK': { code: 'NOK', name: 'Norveç Kronu', flag: '🇳🇴' },
+    'JPY': { code: 'JPY', name: 'Japon Yeni', flag: '🇯🇵' },
+    'SAR': { code: 'SAR', name: 'Suudi Riyali', flag: '🇸🇦' },
+    'gram-platin': { code: 'XPT', name: 'Platin', flag: '💿' },
+    'gram-paladyum': { code: 'XPD', name: 'Paladyum', flag: '⛓️' },
+    'gumus': { code: 'XAG', name: 'Gümüş', flag: '🥈' },
+    'ons': { code: 'XAUUSD', name: 'Altın (ONS)', flag: '⚖️' },
+    'gram-altin': { code: 'XAU', name: 'Altın (Gram)', flag: '🪙' },
+  };
+
   for (const [key, value] of Object.entries(rawData)) {
-    const mapping = FX_MAP[key];
+    const mapping = TRUNCGIL_FX_MAP[key];
     if (!mapping) continue;
 
     const buyPrice = parseFloat(value.Alış?.replace('.', '').replace(',', '.') || '0');
@@ -356,8 +377,8 @@ export async function fetchExchangeRates(): Promise<{
   source: string;
 }> {
   const providers: Array<{ name: string; fn: () => Promise<ExchangeRate[]> }> = [
-    { name: 'web-scraper', fn: fetchExchangeFromScraping },
     { name: 'truncgil', fn: fetchExchangeFromTruncgil },
+    { name: 'web-scraper', fn: fetchExchangeFromScraping },
     { name: 'genelpara', fn: fetchExchangeFromGenelPara },
     { name: 'bigpara', fn: fetchExchangeFromBigpara },
     { name: 'tcmb', fn: fetchExchangeFromTCMB },
