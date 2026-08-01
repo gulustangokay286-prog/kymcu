@@ -284,11 +284,11 @@ export async function fetchGoldFromScraping(): Promise<GoldPrice[]> {
     // Let's use a robust approach by looking for any element with these IDs.
     
     for (const [domId, mapping] of Object.entries(SCRAPE_MAP)) {
-      const priceStr = $(`#${domId}`).text().trim();
-      const percentStr = $(`#${domId}_PERCENT`).text().trim();
+      const elements = $(`#${domId}`);
+      const percentStr = $(`#${domId}_PERCENT`).first().text().trim();
       
       // If we can't find it by ID, let's try to find it by text in the tables
-      if (!priceStr) {
+      if (elements.length === 0) {
         // Fallback to table scraping
         const row = $('tr').filter((_, el) => {
           const text = $(el).find('td').first().text().toLowerCase();
@@ -300,8 +300,8 @@ export async function fetchGoldFromScraping(): Promise<GoldPrice[]> {
           const sellStr = row.find('td').eq(2).text().trim();
           const changeStr = row.find('td').eq(3).text().trim();
           
-          const buyPrice = parseFloat(buyStr.replace('.', '').replace(',', '.') || '0');
-          const sellPrice = parseFloat(sellStr.replace('.', '').replace(',', '.') || '0');
+          const buyPrice = parseFloat(buyStr.replace(/\./g, '').replace(',', '.') || '0');
+          const sellPrice = parseFloat(sellStr.replace(/\./g, '').replace(',', '.') || '0');
           const changePercent = parseFloat(changeStr.replace('%', '').replace(',', '.') || '0');
           
           if (buyPrice > 0) {
@@ -320,10 +320,33 @@ export async function fetchGoldFromScraping(): Promise<GoldPrice[]> {
         continue;
       }
       
-      const sellPrice = parseFloat(priceStr.replace('.', '').replace(',', '.') || '0');
-      // If it only has one price, we simulate a small spread for buy price
-      const buyPrice = sellPrice * 0.995; 
-      const changePercent = parseFloat(percentStr.replace('%', '').replace(',', '.') || '0');
+      const buyStr = elements.eq(0).text().trim();
+      const sellStr = elements.length > 1 ? elements.eq(1).text().trim() : buyStr;
+      
+      // Parse format like 6192.30 (US format used by the site)
+      const parseValue = (s: string) => {
+        if (!s) return 0;
+        // If it has comma as decimal (e.g. 1.234,56)
+        if (s.includes(',') && s.lastIndexOf(',') > s.lastIndexOf('.')) {
+          return parseFloat(s.replace(/\./g, '').replace(',', '.'));
+        }
+        // If it has only comma (e.g. 1234,56)
+        if (s.includes(',') && !s.includes('.')) {
+          return parseFloat(s.replace(',', '.'));
+        }
+        // US format or flat number
+        return parseFloat(s.replace(/,/g, ''));
+      };
+
+      let buyPrice = parseValue(buyStr);
+      let sellPrice = parseValue(sellStr);
+      
+      // Simulate spread if identical
+      if (buyPrice === sellPrice && sellPrice > 0) {
+        buyPrice = sellPrice * 0.995; 
+      }
+      
+      const changePercent = parseValue(percentStr.replace('%', ''));
       
       if (sellPrice > 0) {
         results.push({
