@@ -138,7 +138,7 @@ export function PiyasalarTerminal() {
                   </div>
                   
                   <div className="col-span-3 text-right font-mono text-sm md:text-base text-white">
-                    {asset.price.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                    {asset.price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                   
                   <div className="col-span-4 md:col-span-3 text-right flex items-center justify-end gap-2">
@@ -147,7 +147,7 @@ export function PiyasalarTerminal() {
                         {isPositive ? '+' : ''}{asset.changePercent.toFixed(2)}%
                       </span>
                       <span className="text-[10px] md:text-xs font-mono opacity-80">
-                        {isPositive ? '+' : ''}{asset.change.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                        {isPositive ? '+' : ''}{asset.change.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </div>
                     {isPositive ? (

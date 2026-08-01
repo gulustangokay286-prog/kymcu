@@ -11,10 +11,10 @@ export function TopBar() {
 
   // Gold
   const gram = prices.find((p) => p.code === 'gram-altin');
-  if (gram) items.push({ label: 'GRAM ALTIN', value: `₺${gram.buyPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, pct: gram.changePercent });
+  if (gram) items.push({ label: 'GRAM ALTIN', value: `₺${gram.buyPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, pct: gram.changePercent });
 
   const ons = prices.find((p) => p.code === 'ons-altin');
-  if (ons) items.push({ label: 'ONS', value: `$${ons.buyPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, pct: ons.changePercent });
+  if (ons) items.push({ label: 'ONS', value: `$${ons.buyPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, pct: ons.changePercent });
 
   // FX
   for (const r of rates) {
