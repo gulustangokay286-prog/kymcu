@@ -1,9 +1,9 @@
 import { ExchangeRate } from '@/types/exchange';
 import { API_CONFIG } from '@/lib/constants';
 import { parseStringPromise } from 'xml2js';
+import * as cheerio from 'cheerio';
 
 const FETCH_HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
   'Accept': 'application/json, text/html, */*',
   'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8',
   'Referer': 'https://www.google.com/',
@@ -42,6 +42,47 @@ const FX_MAP: Record<string, { code: string; name: string; flag: string }> = {
   'XPT': { code: 'XPT', name: 'Platin', flag: '💿' },
 };
 
+export async function fetchExchangeFromAhlatci(): Promise<ExchangeRate[]> {
+  try {
+    const response = await fetch('https://www.ahlatcidoviz.com.tr/kr.aspx', {
+      next: { revalidate: 0 },
+      headers: FETCH_HEADERS,
+      signal: AbortSignal.timeout(8000),
+    });
+    
+    if (!response.ok) return [];
+    
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    const results: ExchangeRate[] = [];
+
+    $('table tbody tr').each((_, el) => {
+      const code = $(el).find('th').text().trim();
+      const buyStr = $(el).find('td').eq(0).text().trim();
+      const sellStr = $(el).find('td').eq(1).text().trim();
+      
+      const mapping = FX_MAP[code];
+      if (mapping) {
+        results.push({
+          code: mapping.code,
+          name: mapping.name,
+          buyPrice: parseFloat(buyStr) || 0,
+          sellPrice: parseFloat(sellStr) || 0,
+          change: 0,
+          changePercent: 0,
+          lastUpdate: new Date().toISOString(),
+          flag: mapping.flag,
+        });
+      }
+    });
+
+    return results;
+  } catch (error) {
+    console.error('Ahlatci scrape failed:', error);
+    return [];
+  }
+}
+
 export async function fetchExchangeFromGenelPara(): Promise<ExchangeRate[]> {
   const response = await fetch(API_CONFIG.exchange.genelPara, {
     next: { revalidate: 0 },
@@ -79,7 +120,7 @@ export async function fetchExchangeFromGenelPara(): Promise<ExchangeRate[]> {
 }
 
 // ============================================================
-// BIGPARA PROVIDER (Fallback 1)
+// BIGPARA PROVIDER (Fallback 2)
 // ============================================================
 
 export async function fetchExchangeFromBigpara(): Promise<ExchangeRate[]> {
@@ -254,7 +295,7 @@ export async function fetchExchangeFromTruncgil(): Promise<ExchangeRate[]> {
 // WEB SCRAPING PROVIDER (CanliAltinFiyatlari - Primary)
 // ============================================================
 
-import * as cheerio from 'cheerio';
+// No duplicate import
 
 const SCRAPE_FX_MAP: Record<string, { code: string; name: string; flag: string }> = {
   'USDTRY': { code: 'USD', name: 'Amerikan Doları', flag: '🇺🇸' },
@@ -377,6 +418,7 @@ export async function fetchExchangeRates(): Promise<{
   source: string;
 }> {
   const providers: Array<{ name: string; fn: () => Promise<ExchangeRate[]> }> = [
+    { name: 'ahlatci', fn: fetchExchangeFromAhlatci },
     { name: 'truncgil', fn: fetchExchangeFromTruncgil },
     { name: 'web-scraper', fn: fetchExchangeFromScraping },
     { name: 'genelpara', fn: fetchExchangeFromGenelPara },

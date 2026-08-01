@@ -276,6 +276,16 @@ export async function fetchGoldFromScraping(): Promise<GoldPrice[]> {
     const html = await response.text();
     const $ = cheerio.load(html);
     const results: GoldPrice[] = [];
+    const parseValue = (s: string) => {
+      if (!s) return 0;
+      if (s.includes(',') && s.lastIndexOf(',') > s.lastIndexOf('.')) {
+        return parseFloat(s.replace(/\./g, '').replace(',', '.'));
+      }
+      if (s.includes(',') && !s.includes('.')) {
+        return parseFloat(s.replace(',', '.'));
+      }
+      return parseFloat(s.replace(/,/g, ''));
+    };
 
     for (const [domId, mapping] of Object.entries(SCRAPE_MAP)) {
       const elements = $(`#${domId}`);
