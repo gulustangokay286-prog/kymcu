@@ -277,22 +277,14 @@ export async function fetchGoldFromScraping(): Promise<GoldPrice[]> {
     const $ = cheerio.load(html);
     const results: GoldPrice[] = [];
 
-    // The site uses ul > li structure for prices or tables. We can search for the specific IDs.
-    // Example: <span id="GRAMTRY">2850.50</span> and <span id="GRAMTRY_PERCENT">0.50</span>
-    
-    // We can also extract from HaremAltin's HTML if CanliAltin doesn't have all.
-    // Let's use a robust approach by looking for any element with these IDs.
-    
     for (const [domId, mapping] of Object.entries(SCRAPE_MAP)) {
       const elements = $(`#${domId}`);
       const percentStr = $(`#${domId}_PERCENT`).first().text().trim();
       
-      // If we can't find it by ID, let's try to find it by text in the tables
       if (elements.length === 0) {
-        // Fallback to table scraping
         const row = $('tr').filter((_, el) => {
           const text = $(el).find('td').first().text().toLowerCase();
-          return text.includes(mapping.name.toLowerCase()) || text.includes(mapping.name.split(' ')[0].toLowerCase());
+          return text.includes(mapping.name.toLowerCase()) || text.includes(mapping.code.toLowerCase().replace('-', ' '));
         }).first();
         
         if (row.length > 0) {
@@ -300,9 +292,9 @@ export async function fetchGoldFromScraping(): Promise<GoldPrice[]> {
           const sellStr = row.find('td').eq(2).text().trim();
           const changeStr = row.find('td').eq(3).text().trim();
           
-          const buyPrice = parseFloat(buyStr.replace(/\./g, '').replace(',', '.') || '0');
-          const sellPrice = parseFloat(sellStr.replace(/\./g, '').replace(',', '.') || '0');
-          const changePercent = parseFloat(changeStr.replace('%', '').replace(',', '.') || '0');
+          const buyPrice = parseValue(buyStr);
+          const sellPrice = parseValue(sellStr);
+          const changePercent = parseValue(changeStr.replace('%', ''));
           
           if (buyPrice > 0) {
             results.push({
@@ -322,21 +314,6 @@ export async function fetchGoldFromScraping(): Promise<GoldPrice[]> {
       
       const buyStr = elements.eq(0).text().trim();
       const sellStr = elements.length > 1 ? elements.eq(1).text().trim() : buyStr;
-      
-      // Parse format like 6192.30 (US format used by the site)
-      const parseValue = (s: string) => {
-        if (!s) return 0;
-        // If it has comma as decimal (e.g. 1.234,56)
-        if (s.includes(',') && s.lastIndexOf(',') > s.lastIndexOf('.')) {
-          return parseFloat(s.replace(/\./g, '').replace(',', '.'));
-        }
-        // If it has only comma (e.g. 1234,56)
-        if (s.includes(',') && !s.includes('.')) {
-          return parseFloat(s.replace(',', '.'));
-        }
-        // US format or flat number
-        return parseFloat(s.replace(/,/g, ''));
-      };
 
       let buyPrice = parseValue(buyStr);
       let sellPrice = parseValue(sellStr);
